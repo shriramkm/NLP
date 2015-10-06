@@ -1,0 +1,261 @@
+Results:
+1. Naive Bayes:
+	
+		SPAM 	: 	Case 1  -> 	Precision 	: 0.9826, Recall	: 0.9882, F-Score	: 0.9854			
+				Case 2	->	Precision	: 0.9774, Recall	: 0.9853, F-Score	: 0.9813
+							
+		HAM 	:	Case 1  -> 	Precision	: 0.9878, Recall	: 0.9820, F-Score	: 0.9849
+				Case 2  ->	Precision	: 0.9850, Recall	: 0.9770, F-Score	: 0.9810
+
+		POSITIVE:	Case 1  -> 	Precision	: 0.8748, Recall	: 0.8068, F-Score	: 0.8394
+				Case 2  ->	Precision	: 0.8548, Recall	: 0.7951, F-Score	: 0.8239
+				
+		NEGATIVE:	Case 1  -> 	Precision	: 0.8149, Recall	: 0.8804, F-Score	: 0.8464
+				Case 2  ->	Precision	: 0.8093, Recall	: 0.8655, F-Score	: 0.8365
+					
+2. SVM:
+		SPAM 	: 	Case 1  -> 	Precision 	: 0.9330, Recall	: 0.9946, F-Score	: 0.9628			
+				Case 2	->	Precision	: 0.8970, Recall	: 0.9906, F-Score	: 0.9415
+							
+		HAM 	:	Case 1  -> 	Precision	: 0.9941, Recall	: 0.9265, F-Score	: 0.9591
+				Case 2  ->	Precision	: 0.9894, Recall	: 0.8852, F-Score	: 0.9344
+
+		POSITIVE:	Case 1  -> 	Precision	: 0.8651, Recall	: 0.8741, F-Score	: 0.8696
+				Case 2  ->	Precision	: 0.8277, Recall	: 0.8615, F-Score	: 0.8443
+				
+		NEGATIVE:	Case 1  -> 	Precision	: 0.8683, Recall	: 0.8590, F-Score	: 0.8636
+				Case 2  ->	Precision	: 0.8563, Recall	: 0.8215, F-Score	: 0.8385
+					
+3. Mega M:
+		SPAM 	: 	Case 1  -> 	Precision 	: 0.9354, Recall	: 0.8955, F-Score	: 0.9150			
+				Case 2	->	Precision	: 0.9684, Recall	: 0.9423, F-Score	: 0.9552
+							
+		HAM 	:	Case 1  -> 	Precision	: 0.8970, Recall	: 0.9364, F-Score	: 0.9163
+				Case 2  ->	Precision	: 0.9433, Recall	: 0.9689, F-Score	: 0.9559
+
+		POSITIVE:	Case 1  -> 	Precision	: 0.8723, Recall	: 0.8685, F-Score	: 0.8704
+				Case 2  ->	Precision	: 0.8543, Recall	: 0.8644, F-Score	: 0.8593
+				
+		NEGATIVE:	Case 1  -> 	Precision	: 0.8645, Recall	: 0.8684, F-Score	: 0.8664
+				Case 2  ->	Precision	: 0.8634, Recall	: 0.8533, F-Score	: 0.8583
+			
+
+
+Answers to Questions:
+1. 	In the case of spam detection, Naive Bayes classifier performs better. In the case of sentiment analysis, Mega M performs better. 
+	Naive Bayes performs better than Mega M in the case of spam detection beacuse we have taken the frequency of word occurrence as the feature and 
+	the independence assumption considered by the Naive Bayes classifier suits this feature as occurrence of particular key words might indicate that
+	a mail is spam. Mega M performs better than Naive Bayes in the case of sentiment analysis because the maximum entropy classification method does 
+	not make any independence assumptions about the occurrence of words and as the occurrence of a word could be dependent on the occurrence of other
+	words(positive implies positive and negative implies negative) in a review.
+	
+2. 	In most cases of reducing the size of training set, the F score reduces. The performance drop is least for Naive Bayes classifier(0.01 average) and 
+	a bit more for Mega M(Sentiment analysis only - avg 0.02). The performance drop is the highest for SVM. However, only for the case of spam detection 
+	using Mega M, reducing the size of training set increases the F-score(by 0.04 approximately on an average). The drop in F score is greater for the 
+	Sentiment analysis than for Spam detection.
+	
+
+
+Code overview:
+1.	preprocessingSA.py -	Code that prepares and transforms the file specified as its 1st command line argument in such a way that it can be generated
+							as the training data. In this case, labeledBow.feat.fixed is its 1st argument and the 2nd command line argument is the file
+							that the code will write the transformed and formatted training data. The labels POSITIVE and NEGATIVE are hardcoded in line
+							numbers 11 and 13 and can be changed if needed. The 2nd command line argument can be processedInput.dat.
+							
+	preprocessingSD.py - 	Code that reads all text files under a certain directory and prepares the training data from these text files. Each line in
+							the training file corresponds to one text file. The data in the text file is transformed into the Program Data format with
+							the help of the vocabulary file. The path to the vocabulary file can be changed in line number 34 of the file.
+							
+	split.py		   -	Code that divides the processed program data into training data and development data based on the amounts specified in line 
+							numbers 3 and 4 of the file. There are 3 arguments that have to be specified to run this file. The 1st argument is the source
+							program data(processedInput.dat). The 2nd argument is the training file(train.dat) and the 3rd argument is the development
+							file(dev.dat)
+	
+	preprocessingTestingSA.py -   	Code that prepares the sentiment analysis testing data into the program data format. The code takes in 1 argument like 
+									sentiment_test.feat.fixed and corrects the feature names by incrementing them by 1. In addition to this, the code	
+									also prefixes dummy labels to each line of the file so that the file satisfies the Program Data format. The labels	
+									are hardcoded in line number 5. This code generates test.dat which is the testing file.
+									
+	preprocessingTestingSD.py - 	Code that prepares the spam detection testing data into the program data format. The code parses all the text files
+									under the directory mentioned in line number 39(as an argument to the readFiles function) and creates a file in the		
+									program data format in which, each line corresponds to one text file. This code doesn't need any command line arguments	
+									and it generates test.dat which is the testing file.
+									
+	naiveBayes	- 	Directory under which all the files related to Naive Bayes classifier are stored.
+	svm_light 	- 	Directory under which all the files related to SVM are stored(including the svm code)
+	megam 		- 	Directory under which all the files related to Mega M are stored(including the megam code)
+	
+	nblearn.py	- 	Code that is used to learn from the training data(train.dat) and create a training model(model) out of it. It takes in two arguments.
+					The 1st argument is the training file name and the 2nd argument is the model file name.
+	nbclassify.py - Code that is used to classify the development/test data based on the model and create an output file that contains the class for each
+					input in the development/testing file. It takes in two arguments. The 1st argument is the model file name(model) and the 2nd argument				
+					is the development/testing file name(dev.dat or test.dat)
+	
+	test.dat	- 	Testing file
+	train.dat	- 	Training file
+	output		- 	Output file  
+	processedInput.dat	-	Processed file
+	model       - 	Model file
+	              
+	labeledBow.feat.fixed		- 	Un processed training data for Sentiment analysis
+	sentiment_test.feat.fixed	- 	Un processed testing data for Sentiment analysis
+	spam_or_ham_test			- 	Directory that contains test data in the form of txt files for spam detection
+	statistics.py				- 	Code that finds out the precision, recall and F-score of each label. It takes in two arguments. 
+									The 1st one is the output file(output) that was a result of the previous classification script. The 2nd argument is 
+									labeled development/testing(test.dat or dev.dat).
+	svm.sa.preprocessing.py
+	svm.sd.preprocessing.py
+	megam.sa.preprocessing.py
+	megam.sd.preprocessing.py	- 	Code that is present inside the svm_light and megam directories. This code helps in processing the training/development/test		
+									/testing data so that it can be consumed by Mega M or SVM. Labels are hardcoded inside these files. sa -> sentiment analysis
+									sd -> spam detection
+	svm.sa.postprocessing.py
+	svm.sd.postprocessing.py
+	megam.sa.postprocessing.py
+	megam.sd.postprocessing.py	- 	Code that converts the data that the Mega M/SVM gives out into the normal output format which can be read by statistics.py.
+									sa -> sentiment analysis
+									sd -> spam detection
+	
+	
+
+Instructions for the code:	
+
+Sentiment Analysis:
+
+Open vim split.py. In lines 3 and 4, set trainingFileSize = 75 and devFileSize = 25 (For case1 and 25,75 for case 2 and 100,100 for case 3)
+Run python3 preprocessingSA.py labeledBow.feat.fixed processedInput.dat (This pre processes the labeledBow.feat.fixed file converts the rating to either POSITIVE OR NEGATIVE label based on its value and adds 1 to the word tokens)
+Run python3 split.py processedInput.dat train.dat dev.dat (This divides the processedInput.dat file into train.dat and dev.dat based on the percentages mentioned inside the split.py file)
+
+Case 1 : Training data 75%, Development data 25% for classification
+		Case i) Naive Bayes:
+		Run cp train.dat naiveBayes/sentiment_analysis
+		Run cp dev.dat naiveBayes/sentiment_analysis
+		Run cd naiveBayes/sentiment_analysis
+		Run python3 ../nblearn.py train.dat model
+		Run python3 ../nbclassify.py model dev.dat > output (This generates the file 'output' which contains the classification)
+		Run python3 ../../statistics.py output dev.dat
+		
+		Case ii) SVM:
+		Run cp train.dat svm_light/sentiment_analysis
+		Run cp dev.dat svm_light/sentiment_analysis
+		Run cd svm_light/sentiment_analysis
+		Run python3 svm.sa.preprocessing.py train.dat
+		Run python3 svm.sa.preprocessing.py dev.dat
+		Run ../svm_learn train.dat model
+		Run ../svm_classify dev.dat model predictions
+		Run python3 svm.sa.postprocessing.py predictions(This generates the file 'output' which contains the classification)
+		Run python3 ../../statistics.py output ../../dev.dat
+		
+		Case iii) MegaM:
+		Run cp train.dat megam/sentiment_analysis
+		Run cp dev.dat megam/sentiment_analysis
+		Run cd megam/sentiment_analysis
+		Run python3 megam.sa.preprocessing.py train.dat dev.dat input
+		Run ../megam_i686.opt -fvals binary input > model
+		Run ../megam_i686.opt -fvals -predict model binary input > output1
+		Run python3 megam.sa.postprocessing.py output1(This generates the file 'output' which contains the classification.)
+		Run python3 ../../statistics.py output ../../dev.dat
+
+Case 2 : Training data 25%, Development data 75% for classification
+		Similar to Case 1
+
+Case 3 : Training data 100%, Development data 100%, Testing data for classification 
+		Run python3 preprocessingTestingSA.py sentiment_test.feat.fixed (This generates test.dat which is the preprocessed testing file)
+		
+		Case i) Naive Bayes:
+		Run cp train.dat naiveBayes/sentiment_analysis
+		Run cp test.dat naiveBayes/sentiment_analysis
+		Run cd naiveBayes/sentiment_analysis
+		Run python3 ../nblearn.py train.dat model
+		Run python3 ../nbclassify.py model test.dat > output(This generates the file 'output' which contains the classification)
+		
+		Case ii) SVM:
+		Run cp train.dat svm_light/sentiment_analysis
+		Run cp test.dat svm_light/sentiment_analysis
+		Run cd svm_light/sentiment_analysis
+		Run python3 svm.sa.preprocessing.py train.dat
+		Run python3 svm.sa.preprocessing.py test.dat
+		Run ../svm_learn train.dat model
+		Run ../svm_classify test.dat model predictions
+		Run python3 svm.sa.postprocessing.py predictions(This generates the file 'output' which contains the classification)
+		
+		Case iii) MegaM:
+		Run cp train.dat megam/sentiment_analysis
+		Run cp dev.dat megam/sentiment_analysis
+		Run cp test.dat megam/sentiment_analysis
+		Run cd megam/sentiment_analysis
+		Run python3 megam.sa.preprocessing.py train.dat dev.dat input test.dat
+		Run ../megam_i686.opt -fvals binary input > model
+		Run ../megam_i686.opt -fvals -predict model binary input > output1
+		Run python3 megam.sa.postprocessing.py output1 test(This generates the file 'output' which contains the classification. 'test' command line argument indicates that MegaM is run on a testing file)
+		
+		
+Spam Detection:
+Open vim preprocessingSD.py. In line number 34, we can specify the path to the vocabulary. In line numbers 42 to 49, we can set the paths to the folders that contain the text file and their corresponding labels
+Open vim split.py. In lines 3 and 4, set trainingFileSize = 75 and devFileSize = 25 (For case1 and 25,75 for case 2 and 100,100 for case 3)
+Run python3 preprocessingSD.py processedInput.dat (This pre processes the txt files set in the preprocessingSD.py file and converts each txt file into a line in processedInput.dat by assigning SPAM or HAM labels to each document based on what is set in the preprocessingSD.py file.)
+Run python3 split.py processedInput.dat train.dat dev.dat (This divides the processedInput.dat file into train.dat and dev.dat based on the percentages mentioned inside the split.py file)
+
+Case 1 : Training data 75%, Development data 25% for classification
+		Case i) Naive Bayes:
+		Run cp train.dat naiveBayes/spam_detection
+		Run cp dev.dat naiveBayes/spam_detection
+		Run cd naiveBayes/spam_detection
+		Run python3 ../nblearn.py train.dat model
+		Run python3 ../nbclassify.py model dev.dat > output (This generates the file 'output' which contains the classification)
+		Run python3 ../../statistics.py output dev.dat
+		
+		Case ii) SVM:
+		Run cp train.dat svm_light/spam_detection
+		Run cp dev.dat svm_light/spam_detection
+		Run cd svm_light/spam_detection
+		Run python3 svm.sd.preprocessing.py train.dat
+		Run python3 svm.sd.preprocessing.py dev.dat
+		Run ../svm_learn train.dat model
+		Run ../svm_classify dev.dat model predictions
+		Run python3 svm.sd.postprocessing.py predictions(This generates the file 'output' which contains the classification)
+		Run python3 ../../statistics.py output ../../dev.dat
+		
+		Case iii) MegaM:
+		Run cp train.dat megam/spam_detection
+		Run cp dev.dat megam/spam_detection
+		Run cd megam/spam_detection
+		Run python3 megam.sd.preprocessing.py train.dat dev.dat input
+		Run ../megam_i686.opt -fvals binary input > model
+		Run ../megam_i686.opt -fvals -predict model binary input > output1
+		Run python3 megam.sd.postprocessing.py output1(This generates the file 'output' which contains the classification.)
+		Run python3 ../../statistics.py output ../../dev.dat
+
+Case 2 : Training data 25%, Development data 75% for classification
+		Similar to Case 1
+
+Case 3 : Training data 100%, Development data 100%, Testing data for classification 
+		Run python3 preprocessingTestingSD.py (This generates test.dat by reading the folder that contains the test txt files and converting them into the program data format using the vocabulary file which can be configured inside this file)
+		
+		Case i) Naive Bayes:
+		Run cp train.dat naiveBayes/spam_detection
+		Run cp test.dat naiveBayes/spam_detection
+		Run cd naiveBayes/spam_detection
+		Run python3 ../nblearn.py train.dat model
+		Run python3 ../nbclassify.py model test.dat > output(This generates the file 'output' which contains the classification)
+		
+		Case ii) SVM:
+		Run cp train.dat svm_light/spam_detection
+		Run cp test.dat svm_light/spam_detection
+		Run cd svm_light/spam_detection
+		Run python3 svm.sd.preprocessing.py train.dat
+		Run python3 svm.sd.preprocessing.py test.dat
+		Run ../svm_learn train.dat model
+		Run ../svm_classify test.dat model predictions
+		Run python3 svm.sd.postprocessing.py predictions(This generates the file 'output' which contains the classification)
+		
+		Case iii) MegaM:
+		Run cp train.dat megam/spam_detection
+		Run cp dev.dat megam/spam_detection
+		Run cp test.dat megam/spam_detection
+		Run cd megam/spam_detection
+		Run python3 megam.sd.preprocessing.py train.dat dev.dat input test.dat
+		Run ../megam_i686.opt -fvals binary input > model
+		Run ../megam_i686.opt -fvals -predict model binary input > output1
+		Run python3 megam.sd.postprocessing.py output1 test(This generates the file 'output' which contains the classification. 'test' command line argument indicates that MegaM is run on a testing file)
+
